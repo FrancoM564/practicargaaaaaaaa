@@ -21,11 +21,11 @@ export default function Home() {
   }
 
   useEffect(async () => {
-    let response = await fetch("http://demo9667197.mockable.io/proyectos")
+    let response = await fetch("/api/proyectos")
     const datosProy = await response.json()
     setlistaProyectos(datosProy.proyectos)
 
-    response = await fetch("http://demo9667197.mockable.io/")
+    response = await fetch("/api/imagenes")
     const datosImg = await response.json()
     setlistaImagenes(datosImg.images)
   }, [])
@@ -40,7 +40,7 @@ export default function Home() {
     <div className="mt-2 mb-4">
       <Slider imagenes={listaImagenes} />
       <div className="row mt-4">
-        <TablaProyectos proyectos={listaProyectos} />
+        <TablaProyectos proyectos={listaProyectos} modo={"show"} />
         <FormularioLogin logComprobacion={comprobarLogin}
           error={errorLogin} />
       </div>

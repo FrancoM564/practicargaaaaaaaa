@@ -3,7 +3,7 @@ import Footer from "../componentes/footer.component";
 import VentanaModal from "../componentes/modal.component";
 import BarraNav from "../componentes/nav.component";
 import TablaProyectos from "../componentes/tabla.component";
-import {guardarP,obtenerP,eliminarP,modificarP,obtenerProyectoEsp} from "../dao/proyectosmodal";
+import {guardarP,obtenerP,eliminarP,modificarP,obtenerProyectoEsp} from "../dao/proyectos";
 
 export default function Main() {
 
