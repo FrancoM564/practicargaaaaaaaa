@@ -1,12 +1,35 @@
-const proyectosHandler = (req, res) => {
+import {guardarP,obtenerP,eliminarP,modificarP,obtenerProyectoEsp} from "../../../dao/proyectos";
+
+const proyectosHandler = async (req, res) => {
     if (req.method == "GET") {
-        const proyectos = [
-            {"id" : 1, "nombre": "Proyecto de Prueba A", "usuario" : "billy", "rating" : 4.7},
-            {"id" : 2, "nombre": "Proyecto B", "usuario" : "lionel", "rating" : 4.5}
-        ]
+        //consultar base de datos y devolver respuesta
+        
+        
+        const proyectos = await obtenerP()
         res.json({
             proyectos:proyectos,
             msg:""
+        })
+        return
+    }
+
+    if (req.method == "POST"){
+        //registrar base de datos
+        console.log("guardar en base de datos")
+        const data = JSON.parse(req.body)
+        console.log(data.nombre)
+        await guardarP(data.nombre,"billy",data.rating)
+        res.json({
+            msg:"nais"
+        })
+        return
+    }
+
+    if (req.method =="PUT"){
+        const data = JSON.parse(req.body)
+        await modificarP(data)
+        res.json({
+            msg:"ok"
         })
         return
     }

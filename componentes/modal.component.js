@@ -24,6 +24,9 @@ const VentanaModal = (props) => {
     }
 
     const editarOC = () =>{
+        setNombre(props.proyecto.nombre)
+        setUser(props.proyecto.usuario)
+        setR(props.proyecto.rating)
         props.editar(nombre,usuario,r)
     }
 
@@ -67,15 +70,15 @@ if(props.modo =="nuevo"){
         <Modal.Body>
             <form>
                 <label className="form-label">Nombre del proyecto</label>
-                <input type="text" className="form-control" defaultValue={nombre} 
+                <input type="text" className="form-control" defaultValue={props.proyecto.nombre} 
                         onChange={nombreOC}></input>
 
                 <label className="form-label mt-2">Usuario</label>
-                <input type="text" className="form-control" defaultValue={usuario} 
+                <input type="text" className="form-control" defaultValue={props.proyecto.usuario} 
                         onChange={usuarioOC}></input>
 
                 <label className="form-label mt-2">Rating</label>
-                <input type="number" className="form-control" defaultValue={r} 
+                <input type="number" className="form-control" defaultValue={props.proyecto.rating} 
                         onChange={ratingOC}></input>
             </form>
         </Modal.Body>

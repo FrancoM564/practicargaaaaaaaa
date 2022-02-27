@@ -1,6 +1,6 @@
 const TablaProyectos = (props) => {
     if (props.modo == "crud"){
-        return <main className="col-md-8">
+        return <main className="col-md">
         <h3>Ranking</h3>
         <table className="table">
             <thead>
@@ -31,7 +31,7 @@ const TablaProyectos = (props) => {
         </table>
     </main>
     }else if (props.modo == "show"){
-        return <main className="col-md-8">
+        return <main className="col-md">
         <h3>Ranking</h3>
         <table className="table">
             <thead>

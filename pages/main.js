@@ -3,23 +3,50 @@ import Footer from "../componentes/footer.component";
 import VentanaModal from "../componentes/modal.component";
 import BarraNav from "../componentes/nav.component";
 import TablaProyectos from "../componentes/tabla.component";
-import {guardarP,obtenerP,eliminarP,modificarP,obtenerProyectoEsp} from "../dao/proyectos";
 
 export default function Main() {
 
     const [listaProyectos,setlistaProyectos] = useState([])
     const [mostrar,setMostrar] = useState(false)
     const [modoM,setmodoM] = useState("nuevo")
-    const [proyectoaCambiar,setproyecto] = useState(null) 
+    const [proyectoaCambiar,setproyecto] = useState({
+        nombre:"",
+        usuario:"",
+        rating:0
+    }) 
 
-    useEffect(()=>{
-        setlistaProyectos(obtenerP())
+    const obtenerProyectoHTTP = async () =>{
+        let response = await fetch("/api/proyectos")
+        const data = await response.json()
+        return data
+    }
+
+    useEffect(async ()=>{
+        const datosProy = await obtenerProyectoHTTP()
+        setlistaProyectos(datosProy.proyectos)
     },[])
 
-    const guardarProyecto = (n,u,r) =>{
-        guardarP(n,u,r)
-        setlistaProyectos(obtenerP())
-        setMostrar(false)
+    const guardarProyecto = async (n,u,r) =>{
+        const proyecto = {
+            nombre: n,
+            usuario: u,
+            rating:r,
+        }
+        
+        //peticion a back end para agregar un nuevo proyecto
+        const response = await fetch("/api/proyectos",{
+            method : "POST",
+            body: JSON.stringify(proyecto)
+        });
+
+        const data = await response.json()
+
+        if (data.msg =="nais") {
+            setMostrar(false)
+            const datosProy = await obtenerProyectoHTTP()
+            setlistaProyectos(datosProy.proyectos)
+        }
+        
     }
 
     const ocultarModal =() =>{
@@ -31,27 +58,50 @@ export default function Main() {
         setMostrar(true)
     }
 
-    const eliminarProyecto = (id) =>{
-        eliminarP(id)
-        setlistaProyectos(obtenerP())
+    const eliminarProyecto = async (id) =>{
+        //hacer peticion http delete al servidor /api/proyectos/id
+        const response = await fetch(`/api/proyectos/${id}`,{
+            method : "DELETE"
+        })
+        const data = await response.json()
+        //recargar proyectos
+        if (data.msg =="ok") {
+            const datosProy = await obtenerProyectoHTTP()
+            setlistaProyectos(datosProy.proyectos)
+        }
     }
 
-    const mostrarEdyObtenerID = (id) =>{
+    const mostrarEdyObtenerID = async (id) =>{
+        const response = await fetch(`/api/proyectos/${id}`)
+        const data = await response.json()
+        setproyecto(data.proyecto)
         setmodoM("editar")
         setMostrar(true)
-        setproyecto(obtenerProyectoEsp(id))
     }
 
-    const edicionProyecto = (nombre,user,rating)=>{
-        const nuevoProyecto ={
+    const edicionProyecto = async (nombre,user,rating)=>{
+        const nuevoProyecto =JSON.stringify({
             id:proyectoaCambiar.id,
             nombre:nombre,
             usuario:user,
             rating:rating
+        })
+
+        const response = await fetch("/api/proyectos",{
+            method:"PUT",
+            body:nuevoProyecto
+        })
+
+        const data = await response.json()
+
+        if (data.msg =="ok") {
+            setMostrar(false)
+            const datosProy = await obtenerProyectoHTTP()
+            setlistaProyectos(datosProy.proyectos)
+            return
         }
-        modificarP(nuevoProyecto)
-        setlistaProyectos(obtenerP())
-        setMostrar(false)
+
+        return
     }
 
     return <div>
@@ -76,6 +126,7 @@ export default function Main() {
                     ocultar={ocultarModal}
                     guardar={guardarProyecto}
                     modo = {modoM}
-                    editar={edicionProyecto}/>
+                    editar={edicionProyecto}
+                    proyecto={proyectoaCambiar}/>
     </div>
 }

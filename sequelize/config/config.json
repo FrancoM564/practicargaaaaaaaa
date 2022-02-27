@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "admin",
-    "password": "admin",
-    "database": "xd_db",
-    "host": "127.0.0.1",
+    "username": "postgres",
+    "password": "postgres",
+    "database": "pruebaconn",
+    "host": "prograweb.cfdhzmi8eswt.us-east-2.rds.amazonaws.com",
     "dialect": "postgres"
   },
   "test": {
